@@ -6,6 +6,7 @@ export interface GameState {
     playerTwoCard: Card;
     winnerLabel: String;
     GameEnded: boolean;
+    gameType: string;
 }
 
 export interface Card {
@@ -34,17 +35,17 @@ type KnownAction = ReceivePlayerOneRandomCardAction | ReceivePlayerTwoRandomCard
 
 export const actionCreators = {
     reset: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
-            dispatch({ type: 'RESET'});
+            dispatch({ type: 'RESET' });
     },
     requestPlayerOneRandomCard: (type: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        fetch('api/SFCardGame/RandomCard/hero')
+        fetch(`api/SFCardGame/RandomCard/${type}`)
             .then(response => response.json() as Promise<Card>)
             .then(data => {
                 dispatch({ type: 'RECEIVE_PLAYER_ONE_RANDOM_CARD', playerOneCard: data });
             });
     },
     requestPlayerTwoRandomCard: (type: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        fetch('api/SFCardGame/RandomCard/hero')
+        fetch(`api/SFCardGame/RandomCard/${type}`)
             .then(response => response.json() as Promise<Card>)
             .then(data => {
                 dispatch({ type: 'RECEIVE_PLAYER_TWO_RANDOM_CARD', playerTwoCard: data });
@@ -53,7 +54,7 @@ export const actionCreators = {
 };
 
 const unloadedState: GameState = {
-    GameEnded: false, winnerLabel:"", playerOneCard: { description: "", imageUrl: "", name: "", type: "", value: 0 }, playerTwoCard: { description: "", imageUrl: "", name: "", type: "", value: 0 }
+    gameType: "hero", GameEnded: false, winnerLabel:"", playerOneCard: { description: "", imageUrl: "", name: "", type: "", value: 0 }, playerTwoCard: { description: "", imageUrl: "", name: "", type: "", value: 0 }
 };
 
 export const reducer: Reducer<GameState> = (state: GameState | undefined, incomingAction: Action): GameState => {
@@ -79,7 +80,7 @@ export const reducer: Reducer<GameState> = (state: GameState | undefined, incomi
             }
 
             return {
-                playerTwoCard: state.playerTwoCard,
+                ...state,                
                 playerOneCard: action.playerOneCard,
                 winnerLabel: winnerLabel,
                 GameEnded: gameEnded
@@ -96,8 +97,8 @@ export const reducer: Reducer<GameState> = (state: GameState | undefined, incomi
             }
 
             return {
-                playerTwoCard: action.playerTwoCard,
-                playerOneCard: state.playerOneCard,
+                ...state,
+                playerTwoCard: action.playerTwoCard,               
                 winnerLabel: winnerLabel,
                 GameEnded: gameEnded
             };

@@ -19,6 +19,9 @@ type GameProps =
     & typeof GameStore.actionCreators
 
 class Home extends React.PureComponent<GameProps> {
+    state = {
+        gameType: 'hero'
+    };
    
     public render() {
         return (
@@ -29,12 +32,19 @@ class Home extends React.PureComponent<GameProps> {
     }
 
     handleClick = (player: number) => {
-      
         if (player == 1 && this.props.playerOneCard.value == 0) {
-            this.props.requestPlayerOneRandomCard("")
+            this.props.requestPlayerOneRandomCard(this.state.gameType)
         } else if (player == 2 && this.props.playerTwoCard.value == 0) {
-            this.props.requestPlayerTwoRandomCard("")
+            this.props.requestPlayerTwoRandomCard(this.state.gameType)
         }
+    }
+
+    changeGameType = (event: React.FormEvent<HTMLSelectElement>) => {
+        var safeSearchTypeValue: string = event.currentTarget.value;
+        this.setState({
+            gameType: safeSearchTypeValue
+        });
+        this.props.reset();
     }
 
     private renderCardsTable() {
@@ -42,6 +52,13 @@ class Home extends React.PureComponent<GameProps> {
             <div>
                 <h1>Lets play a game !</h1>
                 <p>Welcome to sf card game. Choose cards type and play.</p>
+                <div>
+                    <label className="mr-1">Select cards type :</label>
+                    <select onChange={this.changeGameType}>
+                        <option key="hero" value="hero">hero</option>
+                        <option key="starship" value="starship">starship</option>
+                    </select>
+                </div>
                 <Button style={{ visibility: this.props.GameEnded ? 'visible' : 'hidden' }} onClick={() => this.props.reset()} color="primary">play again</Button>{' '}
                 <Row>
                     <Col sm="2">
