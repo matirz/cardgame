@@ -16,7 +16,7 @@ type GameProps =
     GameStore.GameState
     & typeof GameStore.actionCreators
 
-class Home extends React.PureComponent<GameProps> {
+export class Home extends React.PureComponent<GameProps> {
     state = {
         gameType: 'hero'
     };
@@ -53,7 +53,7 @@ class Home extends React.PureComponent<GameProps> {
                     <CardTitle>{card.name}</CardTitle>
                     <CardSubtitle>
                         {this.state.gameType == "hero" ? ("Mass: ") : ("Crew count: " )}
-                        {card.value} </CardSubtitle>
+                        {card.value}</CardSubtitle>
                 </CardBody>
             </Card>
         );
@@ -98,3 +98,4 @@ export default connect(
     (state: ApplicationState) => state.game,
     GameStore.actionCreators
 )(Home as any);
+
