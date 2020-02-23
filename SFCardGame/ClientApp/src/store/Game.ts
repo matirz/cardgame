@@ -73,6 +73,9 @@ export const reducer: Reducer<GameState> = (state: GameState | undefined, incomi
                 if (state.playerTwoCard.value > action.playerOneCard.value) {
                     gameEnded = true;
                     winnerLabel = "Player two wins !"
+                } else if (state.playerTwoCard.value < action.playerOneCard.value) {
+                    gameEnded = true;
+                    winnerLabel = "Player one wins !"
                 } else {
                     gameEnded = true;
                     winnerLabel = "Player one wins !"
@@ -90,9 +93,12 @@ export const reducer: Reducer<GameState> = (state: GameState | undefined, incomi
                 if (action.playerTwoCard.value > state.playerOneCard.value) {
                     winnerLabel = "Player two wins !"
                     gameEnded = true;
-                } else {
-                    winnerLabel = "Player one wins !"
+                } else if (action.playerTwoCard.value < state.playerOneCard.value) {
                     gameEnded = true;
+                    winnerLabel = "Player one wins !"
+                } else {
+                    gameEnded = true;
+                    winnerLabel = "Draw !"
                 }
             }
 
